@@ -21,7 +21,6 @@ var fixative = module.exports = deco(function (options) {
   // ### Private Instance Members
   var self = this;
   var orchestrator = new Orchestrator();
-  var exampleFor = {};
   var definitionFor = {};
   var clean = [];
   // ### Public Instance Members
@@ -34,7 +33,6 @@ var fixative = module.exports = deco(function (options) {
 
     if (!name) throw new Error('Task name was not set.');
 
-    exampleFor[name] = definition.example;
     definitionFor[name] = definition;
 
     var task = function (callback) {
@@ -96,10 +94,10 @@ var fixative = module.exports = deco(function (options) {
     var examples = [];
 
     for (n; n > 0; n -= 1) {
-      var e = exampleFor[name]();
+      var e = definitionFor[name].example();
       // TODO expand override to handle single object, array, fn, etc.
       if (override) examples.push(deco.merge(e, override));
-      examples.push(e);
+      else examples.push(e);
     }
 
     if (examples.length === 1) return examples[0];

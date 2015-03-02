@@ -128,6 +128,11 @@ describe('tasks', function () {
     });
 
     it('allows overriding an example', function () {
+      fixture.task({
+        name: 'test1',
+        example: function () { return { a: 1 } }
+      });
+
       var o = fixture.example('test1', { b: 2, c: 3 });
       expect(o).to.be.ok();
       expect(o).to.have.property('a', 1);
