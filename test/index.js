@@ -113,6 +113,11 @@ describe('tasks', function () {
     });
 
     it('creates an array of examples', function () {
+      fixture.task({
+        name: 'test1',
+        example: function () { return { a: 1 } }
+      });
+
       var os = fixture.example(3, 'test1');
       expect(os).to.be.ok();
       expect(os).to.be.an(Array);
