@@ -1,15 +1,24 @@
 {
   "name": "fixative",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/.bin/mocha"
   },
   "keywords": [
     "test",
     "fixture"
   ],
   "author": "William Riley-Land",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.1.2",
+    "deco": "^0.12.3",
+    "orchestrator": "^0.3.7"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.1.0"
+  }
 }
