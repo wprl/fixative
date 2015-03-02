@@ -139,6 +139,8 @@ describe('tasks', function () {
       expect(o).to.have.property('b', 2);
       expect(o).to.have.property('c', 3);
     });
+
+    it('handles override of single object, array, fn, etc.');
   });
 
   describe('cleanup', function () {
@@ -148,6 +150,6 @@ describe('tasks', function () {
   });
 
   describe('helpers', function () {
-
+    it('allows adding helper methods');
   });
 });

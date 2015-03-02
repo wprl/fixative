@@ -95,7 +95,6 @@ var fixative = module.exports = deco(function (options) {
 
     for (n; n > 0; n -= 1) {
       var e = definitionFor[name].example();
-      // TODO expand override to handle single object, array, fn, etc.
       if (override) examples.push(deco.merge(e, override));
       else examples.push(e);
     }
