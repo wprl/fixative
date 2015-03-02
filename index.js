@@ -1,6 +1,7 @@
 'use strict';
 // ## Dependencies
 var deco = require('deco');
+var async = require('async');
 var debug = require('debug')('fixative');
 var Orchestrator = require('orchestrator');
 // ## Private Module Members
@@ -21,30 +22,35 @@ var fixative = module.exports = deco(function (options) {
   var self = this;
   var orchestrator = new Orchestrator();
   var exampleFor = {};
+  var definitionFor = {};
   var clean = [];
   // ### Public Instance Members
   self.helpers = {};
   // #### Method to define a fixture task
   self.task = function (definition) {
     var name = definition.name;
-    var dependencies = definition.dependencies ? [].concat(definition.dependencies) : [];
+    definition.dependencies = definition.dependencies ? [].concat(definition.dependencies) : [];
+    definition.children = definition.children ? [].concat(definition.children) : [];
 
     if (!name) throw new Error('Task name was not set.');
 
     exampleFor[name] = definition.example;
+    definitionFor[name] = definition;
 
     var task = function (callback) {
-      // TODO hand off to plugin if option set
-      self[name] = self.example(name);
-      debug('Set "%s."', name);
+      debug('Running "%s" task...', name);
+
       clean.push(definition.clean);
       debug('Added clean up task for "%s."', name);
-      // TODO children
+
+      self[name] = self.example(name);
+      debug('Set "%s:" %o', name, self[name]);
+
       callback();
     };
 
-    if (dependencies.length === 0) return orchestrator.add(name, task);
-    return orchestrator.add(name, dependencies, task);
+    if (definition.dependencies.length === 0) return orchestrator.add(name, task);
+    return orchestrator.add(name, definition.dependencies, task);
   };
   // #### Method to define a helper method
   self.helper = function (name, f) {
@@ -64,17 +70,14 @@ var fixative = module.exports = deco(function (options) {
 
   // self.create = function (n?, name, override?, callback) {
   self.create = function (name, callback) {
-    // if (!isReal(n)) {
-    //   override = name || null;
-    //   name = n;
-    //   n = 1;
-    // }
-
     debug('Creating "%s..."', name);
     orchestrator.start(name, function (error) {
       if (error) return callback(error);
-      debug('Returning created object(s)');
-      callback(null, self[name]);
+      debug('Created "%s."', name);
+      async.each(definitionFor[name].children, self.create, function (error) {
+        if (error) return callback(error);
+        callback(null, self[name]);
+      });
     });
   };
 
@@ -85,7 +88,7 @@ var fixative = module.exports = deco(function (options) {
       n = 1;
     }
 
-    if (n < 1) throw new Error('Can only create a positive number of examples.');
+    if (n < 0) throw new Error('Can only create a positive number of examples.');
     if (!isInteger(n)) throw new Error('Can only create an integer number of examples.');
 
     debug('Generating %s example(s) of "%s..."', n, name);

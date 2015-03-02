@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha --bail"
   },
   "keywords": [
     "test",
@@ -13,6 +13,7 @@
   "author": "William Riley-Land",
   "license": "MIT",
   "dependencies": {
+    "async": "^0.9.0",
     "debug": "^2.1.2",
     "deco": "^0.12.3",
     "orchestrator": "^0.3.7"
