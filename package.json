@@ -1,0 +1,15 @@
+{
+  "name": "fixative",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "test",
+    "fixture"
+  ],
+  "author": "William Riley-Land",
+  "license": "MIT"
+}
