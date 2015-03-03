@@ -38,7 +38,7 @@ var fixative = module.exports = deco(function (options) {
     var task = function (callback) {
       debug('Running "%s" task...', name);
 
-      clean.push(definition.clean);
+      clean.push(definition);
       debug('Added clean up task for "%s."', name);
 
       self[name] = self.example(name);
@@ -103,12 +103,19 @@ var fixative = module.exports = deco(function (options) {
     return examples;
   };
 
-  self.clean = function (name) {
-    cleanup.forEach(function (worker) {
-      // TODO delete worker
+  self.clean = function (callback) {
+    var count = clean.length;
+    async.each(clean, function (definition, next) {
+      delete self[definition.name];
+      if (!definition.clean) return next();
+
+      definition.clean(next);
+    }, function (error) {
+      if (error) return callback(error);
+      // Stop tracking cleaned up tasks.
+      clean = [];
+      callback(null, count);
     });
-    // Stop tracking cleaned up tasks.
-    cleanup = [];
   };
 
   self.plugin = function (name, definition) {

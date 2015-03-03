@@ -144,9 +144,22 @@ describe('tasks', function () {
   });
 
   describe('cleanup', function () {
-    it('tracks created tasks');
-    it('cleans up tasks');
-    it("doesn't track cleaned up tasks anymore");
+    it('cleans up tasks', function (done) {
+      fixture.task({
+        name: 'test1',
+        example: function () { return { a: 1 } }
+      });
+      fixture.create('test1', function (error, o) {
+        if (error) return done(error);
+        expect(fixture).to.have.property('test1', o);
+        fixture.clean(function (error, count) {
+          if (error) return done(error);
+          expect(count).to.be(1);
+          expect(fixture).not.to.have.property('test1');
+          done();
+        });
+      });
+    });
   });
 
   describe('helpers', function () {
