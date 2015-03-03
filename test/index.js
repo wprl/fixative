@@ -186,6 +186,10 @@ describe('tasks', function () {
   });
 
   describe('helpers', function () {
-    it('allows adding helper methods');
+    it('allows adding helper methods', function (done) {
+      fixture.helper('test', function () { expect(this).to.be(fixture) });
+      fixture.helpers.test();
+      done();
+    });
   });
 });
