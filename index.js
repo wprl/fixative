@@ -21,10 +21,9 @@ var fixative = module.exports = deco(function (options) {
   // ### Private Instance Members
   var self = this;
   var orchestrator = new Orchestrator();
+  var helperFor = {};
   var definitionFor = {};
   var clean = [];
-  // ### Public Instance Members
-  self.helpers = {};
   // #### Method to define a fixture task
   self.task = function (definition) {
     var name = definition.name;
@@ -51,18 +50,24 @@ var fixative = module.exports = deco(function (options) {
     return orchestrator.add(name, definition.dependencies, task);
   };
   // #### Method to define a helper method
-  self.helper = function (name, f) {
-    if (!name) {
-      throw new Error('No helper name given.');
+  self.helper = function (definition) {
+    var args;
+
+    if (typeof definition === 'string') {
+      args = Array.prototype.slice.call(arguments, 1);
+      return helperFor[definition].apply(self, args);
     }
-    if (!f) {
-      throw new Error('No helper function given.');
-    }
-    if (self.helpers[name]) {
+
+    if (!definition) throw new Error('No arguments supplied to helper.');
+    if (!definition.name) throw new Error('No helper name.');
+
+    var name = definition.name;
+
+    if (helperFor[name]) {
       throw new Error('A helper is already registered with the name "' + name + '"');
     }
 
-    self.helpers[name] = f.bind(self);
+    helperFor[name] = definition.f.bind(self);
     return self;
   };
 

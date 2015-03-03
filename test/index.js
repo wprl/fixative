@@ -187,26 +187,32 @@ describe('tasks', function () {
 
   describe('helpers', function () {
     it('allows adding helper methods', function (done) {
-      fixture.helper('test', function () { expect(this).to.be(fixture) });
-      fixture.helpers.test();
+      fixture.helper({
+        name: 'test',
+        f: function () { expect(this).to.be(fixture) }
+      });
+      fixture.helper('test');
       done();
     });
 
-    it('requires a helper name', function (done) {
-      function f () { fixture.helper() }
+    it('allows passing arguments', function (done) {
+      fixture.helper({
+        name: 'sum',
+        f: function (a, b) { return a + b }
+      });
+      expect(fixture.helper('sum', 2, 3)).to.be(5);
+      done();
+    });
+
+    it('requires name', function (done) {
+      function f () { fixture.helper({}) }
       expect(f).to.throwError(/no helper name/i);
       done();
     });
 
-    it('requires a helper function', function (done) {
-      function f () { fixture.helper('test') }
-      expect(f).to.throwError(/no helper function/i);
-      done();
-    });
-
-    it('does not allow registering two helpers with the same name', function (done) {
-      function f () { fixture.helper('test', f); fixture.helper('test', f) }
-      expect(f).to.throwError(/already registered with the name "test"/i);
+    it('requires arguments', function (done) {
+      function f () { fixture.helper() }
+      expect(f).to.throwError(/no arguments/i);
       done();
     });
   });
