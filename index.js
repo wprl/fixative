@@ -74,14 +74,20 @@ var fixative = module.exports = deco(function (options) {
   // self.create = function (n?, name, override?, callback) {
   self.create = function (name, callback) {
     debug('Creating "%s..."', name);
-    orchestrator.start(name, function (error) {
-      if (error) return callback(error);
-      debug('Created "%s."', name);
-      async.each(definitionFor[name].children, self.create, function (error) {
-        if (error) return callback(error);
-        callback(null, self[name]);
+
+    function f (done) {
+      orchestrator.start(name, function (error) {
+        if (error) return done(error);
+        debug('Created "%s."', name);
+        async.each(definitionFor[name].children, self.create, function (error) {
+          if (error) return done(error);
+          done(null, self[name]);
+        });
       });
-    });
+    }
+
+    if (!callback) return f;
+    return f(callback);
   };
 
   self.example = function (n, name, override) {

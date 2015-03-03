@@ -2,13 +2,13 @@ var fixative = require('..');
 var expect = require('expect.js');
 
 describe('tasks', function () {
-  var fixture;
-
-  beforeEach(function () {
-    fixture = fixative();
-  });
-
   describe('define', function () {
+    var fixture;
+
+    beforeEach(function () {
+      fixture = fixative();
+    });
+
     it('requires setting a name', function () {
       function f () { fixture.task({}) }
       expect(f).to.throwError(/task name was not set/i);
@@ -101,6 +101,12 @@ describe('tasks', function () {
   });
 
   describe('example', function () {
+    var fixture;
+
+    beforeEach(function () {
+      fixture = fixative();
+    });
+
     it('creates a single example', function () {
       fixture.task({
         name: 'test1',
@@ -144,6 +150,12 @@ describe('tasks', function () {
   });
 
   describe('cleanup', function () {
+    var fixture;
+
+    beforeEach(function () {
+      fixture = fixative();
+    });
+
     it('cleans up tasks', function (done) {
       fixture.task({
         name: 'test1',
@@ -186,6 +198,12 @@ describe('tasks', function () {
   });
 
   describe('helpers', function () {
+    var fixture;
+
+    beforeEach(function () {
+      fixture = fixative();
+    });
+
     it('allows adding helper methods', function (done) {
       fixture.helper({
         name: 'test',
@@ -213,6 +231,29 @@ describe('tasks', function () {
     it('requires arguments', function (done) {
       function f () { fixture.helper() }
       expect(f).to.throwError(/no arguments/i);
+      done();
+    });
+  });
+
+  describe('mocha', function () {
+
+    var fixture = fixative();
+    fixture.task({
+      name: 'test1',
+      example: function () { return { a: 1 } }
+    });
+
+    before(fixture.create('test1'));
+    afterEach(fixture.clean);
+
+    it('creates as a mocha task', function (done) {
+      expect(fixture).to.have.property('test1');
+      expect(fixture.test1).to.have.property('a', 1);
+      done();
+    });
+
+    it('cleans as a mocha task', function (done) {
+      expect(fixture).not.to.have.property('test1');
       done();
     });
   });
