@@ -160,6 +160,29 @@ describe('tasks', function () {
         });
       });
     });
+
+    it('allows custom cleanup function', function (done) {
+      var wasCalled = false;
+      fixture.task({
+        name: 'test1',
+        example: function () { return { a: 1 } },
+        clean: function (callback) {
+          wasCalled = true;
+          callback();
+        }
+      });
+      fixture.create('test1', function (error, o) {
+        if (error) return done(error);
+        expect(fixture).to.have.property('test1', o);
+        fixture.clean(function (error, count) {
+          if (error) return done(error);
+          expect(count).to.be(1);
+          expect(fixture).not.to.have.property('test1');
+          expect(wasCalled).to.be(true);
+          done();
+        });
+      });
+    });
   });
 
   describe('helpers', function () {
