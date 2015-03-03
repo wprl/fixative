@@ -1,14 +1,30 @@
 {
   "name": "fixative",
-  "version": "0.0.8",
-  "description": "",
+  "version": "0.0.9",
+  "description": "Fixative is a module for node that helps organize your mocha fixtures and test helpers.",
   "main": "index.js",
+  "homepage": "https://github.com/wprl/fixative",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wprl/fixative.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wprl/fixative/issues/new",
+    "email": "william@kun.io"
+  },
+  "author": {
+    "name": "William Riley-Land",
+    "email": "william@kun.io",
+    "url": "http://kun.io/wprl"
+  },
   "scripts": {
     "test": "./node_modules/.bin/mocha --bail"
   },
   "keywords": [
     "test",
-    "fixture"
+    "fixture",
+    "mocha",
+    "organize"
   ],
   "author": "William Riley-Land",
   "license": "MIT",
