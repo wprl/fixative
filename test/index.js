@@ -191,5 +191,23 @@ describe('tasks', function () {
       fixture.helpers.test();
       done();
     });
+
+    it('requires a helper name', function (done) {
+      function f () { fixture.helper() }
+      expect(f).to.throwError(/no helper name/i);
+      done();
+    });
+
+    it('requires a helper function', function (done) {
+      function f () { fixture.helper('test') }
+      expect(f).to.throwError(/no helper function/i);
+      done();
+    });
+
+    it('does not allow registering two helpers with the same name', function (done) {
+      function f () { fixture.helper('test', f); fixture.helper('test', f) }
+      expect(f).to.throwError(/already registered with the name "test"/i);
+      done();
+    });
   });
 });
