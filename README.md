@@ -18,6 +18,7 @@ fixture.task({
 fixture.create('user', function (error, o) {
   if (error) throw error;
   expect(o === fixture.user);
+  expect(o.name === 'alex');
 });
 ```
 
@@ -25,7 +26,7 @@ Fixture tasks are compatible with mocha.
 
 ```javascript
 describe('suite', function () {
-  before(fixture.create('user'));
+  before(fixture.hook('user'));
   after(fixture.clean);
 
   it('does something', function () {

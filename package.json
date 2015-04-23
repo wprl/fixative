@@ -1,6 +1,6 @@
 {
   "name": "fixative",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Fixative is a module for node that helps organize your mocha fixtures and test helpers.",
   "main": "index.js",
   "homepage": "https://github.com/wprl/fixative",

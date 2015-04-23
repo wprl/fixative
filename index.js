@@ -75,19 +75,21 @@ var fixative = module.exports = deco(function (options) {
   self.create = function (name, callback) {
     debug('Creating "%s..."', name);
 
-    function f (done) {
-      orchestrator.start(name, function (error) {
-        if (error) return done(error);
-        debug('Created "%s."', name);
-        async.each(definitionFor[name].children, self.create, function (error) {
-          if (error) return done(error);
-          done(null, self[name]);
-        });
+    orchestrator.start(name, function (error) {
+      if (error) return callback(error);
+      debug('Created "%s."', name);
+      async.each(definitionFor[name].children, self.create, function (error) {
+        if (error) return callback(error);
+        callback(null, self[name]);
       });
-    }
+    });
+  };
 
-    if (!callback) return f;
-    return f(callback);
+  self.hook = function (name) {
+    debug('Adding test hook for "%s..."', name);
+    return function (done) {
+      self.create(name, done);
+    };
   };
 
   self.example = function (n, name, override) {
@@ -96,6 +98,8 @@ var fixative = module.exports = deco(function (options) {
       name = n;
       n = 1;
     }
+
+    if (!definitionFor[name].example) return undefined;
 
     if (n < 0) throw new Error('Can only create a positive number of examples.');
     if (!isInteger(n)) throw new Error('Can only create an integer number of examples.');

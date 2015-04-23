@@ -146,6 +146,15 @@ describe('tasks', function () {
       expect(o).to.have.property('c', 3);
     });
 
+    it("doesn't require an example to be set", function () {
+      fixture.task({
+        name: 'test1'
+      });
+
+      var o = fixture.example('test1');
+      expect(o).to.be(undefined);
+    });
+
     it('handles override of single object, array, fn, etc.');
   });
 
@@ -243,7 +252,7 @@ describe('tasks', function () {
       example: function () { return { a: 1 } }
     });
 
-    before(fixture.create('test1'));
+    before(fixture.hook('test1'));
     afterEach(fixture.clean);
 
     it('creates as a mocha task', function (done) {
