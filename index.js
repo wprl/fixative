@@ -1,5 +1,7 @@
 'use strict';
 // ## Dependencies
+var fs = require('fs');
+var path = require('path');
 var deco = require('deco');
 var async = require('async');
 var debug = require('debug')('fixative');
@@ -159,3 +161,13 @@ var fixative = deco(function (options) {
 });
 
 var defaultFixture = module.exports = fixative();
+
+// TODO allow passing in dir
+var testBinDirectory = path.dirname(require.main.filename);
+// in tests we'll be in node_modules/.bin
+var mainDirectory = path.resolve(testBinDirectory, '../../..');
+var fixtureDirectory = path.resolve(mainDirectory, './test/fixtures');
+
+if (fs.existsSync(fixtureDirectory)) {
+  var tasks = deco.require(fs.realpathSync(fixtureDirectory));
+}
