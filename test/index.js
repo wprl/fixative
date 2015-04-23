@@ -113,7 +113,7 @@ describe('tasks', function () {
         expect(fixture).not.to.have.property('test1');
         done();
       });
-    })
+    });
 
     it.skip('allows overriding a task by named scenario', function () {
       fixture.task({
@@ -226,6 +226,7 @@ describe('tasks', function () {
         name: 'test1',
         example: function () { return { a: 1 } },
         clean: function (callback) {
+          expect(fixture).to.have.property('test1');
           wasCalled = true;
           callback();
         }

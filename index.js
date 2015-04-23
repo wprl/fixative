@@ -131,10 +131,18 @@ var fixative = deco(function (options) {
   self.clean = function (callback) {
     var count = clean.length;
     async.each(clean, function (definition, next) {
-      delete self[definition.name];
-      if (!definition.clean) return next();
+      if (!definition.clean) {
+        delete self[definition.name];
+        next();
+        return;
+      }
 
-      definition.clean(next);
+      definition.clean(function (error) {
+        if (error) return next(error);
+        delete self[definition.name];
+        next();
+        return;
+      });
     }, function (error) {
       if (error) return callback(error);
       // Stop tracking cleaned up tasks.
