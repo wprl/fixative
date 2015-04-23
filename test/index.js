@@ -77,6 +77,44 @@ describe('tasks', function () {
       });
     });
 
+    it("doesn't allow creating a task that doesn't exist", function (done) {
+      fixture.create('test3', function (error, o) {
+        expect(error).to.be.ok();
+        done();
+      });
+    });
+
+    it('runs the initialization function if present', function (done) {
+      var wasCalled = false;
+      fixture.task({
+        name: 'test1',
+        initialize: function () {
+          wasCalled = true;
+        }
+      });
+      fixture.create('test1', function (error, o) {
+        if (error) return done(error);
+        expect(o).not.to.be.ok();
+        expect(wasCalled).to.be.ok();
+        done();
+      });
+    });
+
+    it("doesn't set the value on the fixture if no example", function (done) {
+      fixture.task({
+        name: 'test1',
+        initialize: function () {
+          // noop
+        }
+      });
+      fixture.create('test1', function (error, o) {
+        if (error) return done(error);
+        expect(o).to.be(undefined);
+        expect(fixture).not.to.have.property('test1');
+        done();
+      });
+    })
+
     it.skip('allows overriding a task by named scenario', function () {
       fixture.task({
         name: 'test3',

@@ -41,11 +41,17 @@ var fixative = deco(function (options) {
     var task = function (callback) {
       debug('Running "%s" task...', name);
 
+      if (definition.initialize) {
+        definition.initialize();
+      }
+
       clean.push(definition);
       debug('Added clean up task for "%s."', name);
 
-      self[name] = self.example(name);
-      debug('Set "%s:" %o', name, self[name]);
+      if (definition.example) {
+        self[name] = self.example(name);
+        debug('Set "%s:" %o', name, self[name]);
+      }
 
       callback();
     };
