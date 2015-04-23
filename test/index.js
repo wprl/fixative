@@ -286,23 +286,45 @@ describe('tasks', function () {
   describe('mocha', function () {
 
     var fixture = fixative.instantiate();
+    var wasCalled1 = false;
+    var wasCalled2 = false;
+
     fixture.task({
       name: 'test1',
-      example: function () { return { a: 1 } }
+      example: function () { return { a: 1 } },
+      clean: function (callback) {
+        expect(fixture).to.have.property('test1');
+        wasCalled1 = true;
+        callback();
+      }
+    });
+
+    fixture.task({
+      name: 'test2',
+      clean: function (callback) {
+        wasCalled2 = true;
+        callback();
+      }
     });
 
     before(fixture.hook('test1'));
+    before(fixture.hook('test2'));
     afterEach(fixture.clean);
 
     it('creates as a mocha task', function (done) {
       expect(fixture).to.have.property('test1');
+      expect(fixture).not.to.have.property('test2');
       expect(fixture.test1).to.have.property('a', 1);
       done();
     });
 
     it('cleans as a mocha task', function (done) {
       expect(fixture).not.to.have.property('test1');
+      expect(fixture).not.to.have.property('test2');
+      expect(wasCalled1).to.be(true);
+      expect(wasCalled2).to.be(true);
       done();
     });
+
   });
 });
