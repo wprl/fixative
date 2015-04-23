@@ -6,7 +6,7 @@ describe('tasks', function () {
     var fixture;
 
     beforeEach(function () {
-      fixture = fixative();
+      fixture = fixative.instantiate();
     });
 
     it('requires setting a name', function () {
@@ -104,7 +104,7 @@ describe('tasks', function () {
     var fixture;
 
     beforeEach(function () {
-      fixture = fixative();
+      fixture = fixative.instantiate();
     });
 
     it('creates a single example', function () {
@@ -162,7 +162,7 @@ describe('tasks', function () {
     var fixture;
 
     beforeEach(function () {
-      fixture = fixative();
+      fixture = fixative.instantiate();
     });
 
     it('cleans up tasks', function (done) {
@@ -210,7 +210,7 @@ describe('tasks', function () {
     var fixture;
 
     beforeEach(function () {
-      fixture = fixative();
+      fixture = fixative.instantiate();
     });
 
     it('allows adding helper methods', function (done) {
@@ -246,7 +246,7 @@ describe('tasks', function () {
 
   describe('mocha', function () {
 
-    var fixture = fixative();
+    var fixture = fixative.instantiate();
     fixture.task({
       name: 'test1',
       example: function () { return { a: 1 } }

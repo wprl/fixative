@@ -17,13 +17,17 @@ function isInteger (n) {
   return true;
 }
 // ## Module Definition
-var fixative = module.exports = deco(function (options) {
+var fixative = deco(function (options) {
   // ### Private Instance Members
   var self = this;
   var orchestrator = new Orchestrator();
   var helperFor = {};
   var definitionFor = {};
   var clean = [];
+  // #### Method to instantiate a new fixture object
+  self.instantiate = function (options2) {
+    return fixative(options2);
+  };
   // #### Method to define a fixture task
   self.task = function (definition) {
     var name = definition.name;
@@ -135,6 +139,9 @@ var fixative = module.exports = deco(function (options) {
 
   self.plugin = function (name, definition) {
     // use the same interface for local and npm-installed plugins
+    throw new Error('Not implemented.');
   };
 
 });
+
+var defaultFixture = module.exports = fixative();

@@ -7,7 +7,7 @@ Fixative is a module for node that helps organize your mocha fixtures and test h
 Define a fixture task:
 
 ```javascript
-var fixture = require('fixative')();
+var fixture = require('fixative');
 var expect = require('expect.js');
 
 fixture.task({
