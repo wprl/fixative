@@ -45,6 +45,7 @@ var fixative = deco(function (options) {
 
       if (definition.initialize) {
         definition.initialize();
+        debug('Ran initialize task for "%s".', name);
       }
 
       clean.push(definition);
@@ -131,6 +132,7 @@ var fixative = deco(function (options) {
   };
 
   self.clean = function (callback) {
+    debug('Running clean up tasks.');
     var count = clean.length;
     async.each(clean, function (definition, next) {
       if (!definition.clean) {
@@ -154,7 +156,7 @@ var fixative = deco(function (options) {
   };
 
   self.plugin = function (name, definition) {
-    // use the same interface for local and npm-installed plugins
+    // Use the same interface for local and npm-installed plugins
     throw new Error('Not implemented.');
   };
 
