@@ -39,8 +39,14 @@ var fixative = deco(function (options) {
     if (!name) throw new Error('Task name was not set.');
 
     definitionFor[name] = definition;
+    definition.wasRun = false;
 
     var task = function (callback) {
+      if (definition.wasRun) {
+        debug('Already ran "%s" task...', name);
+        return callback();
+      }
+
       debug('Running "%s" task...', name);
 
       if (definition.initialize) {
@@ -56,6 +62,7 @@ var fixative = deco(function (options) {
         debug('Set "%s:" %o', name, self[name]);
       }
 
+      definition.wasRun = true;
       callback();
     };
 
@@ -145,6 +152,7 @@ var fixative = deco(function (options) {
         if (error) return next(error);
         delete self[definition.name];
         next();
+        definition.wasRun = false;
         return;
       });
     }, function (error) {

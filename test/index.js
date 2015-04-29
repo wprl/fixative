@@ -301,20 +301,31 @@ describe('tasks', function () {
 
     fixture.task({
       name: 'test2',
+      dependencies: ['test1'],
+      initialize: function () {
+        fixture.test1.b = 2;
+      },
       clean: function (callback) {
         wasCalled2 = true;
         callback();
       }
     });
 
+    fixture.task({
+      name: 'test3',
+      dependencies: ['test1']
+    });
+
     before(fixture.hook('test1'));
     before(fixture.hook('test2'));
+    //before(fixture.hook('test3'));
     afterEach(fixture.clean);
 
     it('creates as a mocha task', function (done) {
       expect(fixture).to.have.property('test1');
       expect(fixture).not.to.have.property('test2');
       expect(fixture.test1).to.have.property('a', 1);
+      expect(fixture.test1).to.have.property('b', 2);
       done();
     });
 
