@@ -144,6 +144,7 @@ var fixative = deco(function (options) {
     async.each(clean, function (definition, next) {
       if (!definition.clean) {
         delete self[definition.name];
+        definition.wasRun = false;
         next();
         return;
       }
@@ -151,8 +152,8 @@ var fixative = deco(function (options) {
       definition.clean(function (error) {
         if (error) return next(error);
         delete self[definition.name];
-        next();
         definition.wasRun = false;
+        next();
         return;
       });
     }, function (error) {
