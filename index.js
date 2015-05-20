@@ -1,4 +1,9 @@
 'use strict';
+// ## Config
+var config = require('rc')('fixative', {
+  preload: ''
+});
+
 // ## Dependencies
 var fs = require('fs');
 var path = require('path');
@@ -173,12 +178,18 @@ var fixative = deco(function (options) {
 
 var defaultFixture = module.exports = fixative();
 
-// TODO allow passing in dir
-var testBinDirectory = path.dirname(require.main.filename);
-// in tests we'll be in node_modules/.bin
-var mainDirectory = path.resolve(testBinDirectory, '../../..');
-var fixtureDirectory = path.resolve(mainDirectory, './test/fixtures');
+if (config.preload) {
+  try {
+    var testBinDirectory = path.dirname(require.main.filename);
+    // in tests we'll be in node_modules/.bin
+    var mainDirectory = path.resolve(testBinDirectory, '../../..');
+    var preloadDirectory = path.resolve(mainDirectory, config.preload);
 
-if (fs.existsSync(fixtureDirectory)) {
-  var tasks = deco.require(fs.realpathSync(fixtureDirectory));
+    deco.require(fs.realpathSync(preloadDirectory));
+  }
+  catch (e) {
+    e.originalMessage = e.message;
+    e.message = 'Could not preload fixture tasks.';
+    throw e;
+  }
 }
