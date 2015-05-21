@@ -47,3 +47,25 @@ fixture.helper({
 
 expect(fixture.helper('lol')).to.be('ha ha');
 ```
+
+## Config
+
+fixative uses the [`rc`](https://www.npmjs.com/package/rc) module for configuration.  That means you can use a `.fixativerc` file or environment variables to configure fixative.
+
+### preload
+
+Use this option to specify a directory of fixture tasks to preload when fixative is `require`d.  
+
+Put this in the project's `.fixativerc`:
+
+```javascript
+{
+  "preload": "./test/fixture"
+}
+```
+
+Alternatively, set an environment variable:
+
+```bash
+fixative_preload=./test/fixture npm test
+```
