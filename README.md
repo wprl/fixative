@@ -54,13 +54,13 @@ fixative uses the [`rc`](https://www.npmjs.com/package/rc) module for configurat
 
 ### preload
 
-Use this option to specify a directory of fixture tasks to preload when fixative is `require`d.  
+Use this option to specify a directory or directories of fixture tasks to preload when fixative is `require`d.
 
 Put this in the project's `.fixativerc`:
 
 ```javascript
 {
-  "preload": "./test/fixture"
+  "preload": "./test/fixture,./node_modules/common-fixtures"
 }
 ```
 

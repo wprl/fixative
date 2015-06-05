@@ -3,11 +3,11 @@
 var config = require('rc')('fixative', {
   preload: ''
 });
-
 // ## Dependencies
 var fs = require('fs');
 var path = require('path');
 var deco = require('deco');
+var util = require('util');
 var async = require('async');
 var debug = require('debug')('fixative');
 var Orchestrator = require('orchestrator');
@@ -181,15 +181,18 @@ var defaultFixture = module.exports = fixative();
 if (config.preload) {
   try {
     var testBinDirectory = path.dirname(require.main.filename);
-    // in tests we'll be in node_modules/.bin
+    // In tests we'll be in `node_modules/.bin`
     var mainDirectory = path.resolve(testBinDirectory, '../../..');
-    var preloadDirectory = path.resolve(mainDirectory, config.preload);
 
-    deco.require(fs.realpathSync(preloadDirectory));
+    config.preload.split(',').forEach(function (preloadPath) {
+      var preloadDirectory = path.resolve(mainDirectory, preloadPath);
+      deco.require(fs.realpathSync(preloadDirectory));
+    });
   }
   catch (e) {
     e.originalMessage = e.message;
-    e.message = 'Could not preload fixture tasks.';
+    e.message = util.format('Could not preload fixture tasks: "%s".',
+      e.message);
     throw e;
   }
 }
